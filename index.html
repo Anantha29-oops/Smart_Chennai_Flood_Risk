@@ -1,0 +1,3505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Smart Chennai Flood Risk Analytics</title>
+
+<style>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef4f9 0%,
+            #f7f9fc 45%,
+            #edf3f8 100%
+        );
+
+    color: #172b3f;
+
+    min-height: 100vh;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   BACKGROUND EFFECT
+========================================================= */
+
+body::before {
+
+    content: "";
+
+    position: fixed;
+
+    width: 500px;
+
+    height: 500px;
+
+    top: -220px;
+
+    right: -150px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(30, 118, 184, 0.13),
+            transparent 70%
+        );
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+body::after {
+
+    content: "";
+
+    position: fixed;
+
+    width: 400px;
+
+    height: 400px;
+
+    bottom: -180px;
+
+    left: -150px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(20, 78, 115, 0.09),
+            transparent 70%
+        );
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 100;
+
+    height: 76px;
+
+    padding: 0 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    background:
+        rgba(12, 36, 58, 0.96);
+
+    backdrop-filter: blur(16px);
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,0.08);
+
+    box-shadow:
+        0 8px 30px
+        rgba(8, 31, 50, 0.15);
+}
+
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.brand-mark {
+
+    width: 40px;
+
+    height: 40px;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1d83c6,
+            #14547b
+        );
+
+    color: white;
+
+    font-weight: 800;
+
+    font-size: 17px;
+
+    box-shadow:
+        0 7px 18px
+        rgba(29,131,198,0.25);
+}
+
+
+.brand-text h1 {
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.2px;
+}
+
+
+.brand-text p {
+
+    margin-top: 2px;
+
+    color: #9fb4c7;
+
+    font-size: 11px;
+
+    letter-spacing: 0.5px;
+}
+
+
+.system-status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 9px 15px;
+
+    border-radius: 30px;
+
+    background:
+        rgba(255,255,255,0.06);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.09);
+
+    color: #d8e7f2;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.status-dot {
+
+    width: 8px;
+
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #35c78a;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(53,199,138,0.12);
+
+    animation:
+        pulse 2s infinite;
+}
+
+
+@keyframes pulse {
+
+    0%,100% {
+        box-shadow:
+            0 0 0 4px
+            rgba(53,199,138,0.10);
+    }
+
+    50% {
+        box-shadow:
+            0 0 0 7px
+            rgba(53,199,138,0.02);
+    }
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.container {
+
+    width: min(1380px, calc(100% - 60px));
+
+    margin: auto;
+
+    padding:
+        38px 0 55px;
+}
+
+
+/* =========================================================
+   PAGE INTRO
+========================================================= */
+
+.page-intro {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    margin-bottom: 28px;
+}
+
+
+.intro-left {
+
+    max-width: 760px;
+}
+
+
+.eyebrow {
+
+    display: inline-block;
+
+    margin-bottom: 10px;
+
+    color: #1d76ad;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+}
+
+
+.page-intro h2 {
+
+    font-size: 34px;
+
+    line-height: 1.15;
+
+    letter-spacing: -0.7px;
+
+    color: #132c42;
+}
+
+
+.page-intro p {
+
+    margin-top: 11px;
+
+    color: #687b8e;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+.data-badge {
+
+    padding: 11px 15px;
+
+    background: white;
+
+    border: 1px solid #dce5ed;
+
+    border-radius: 10px;
+
+    color: #52697d;
+
+    font-size: 12px;
+
+    box-shadow:
+        0 5px 18px
+        rgba(18,49,72,0.05);
+}
+
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+.stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 16px;
+
+    margin-bottom: 22px;
+}
+
+
+.stat-card {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        rgba(255,255,255,0.95);
+
+    border:
+        1px solid #dfe7ee;
+
+    border-radius: 14px;
+
+    padding: 21px;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+
+    box-shadow:
+        0 5px 20px
+        rgba(20,48,70,0.055);
+}
+
+
+.stat-card:hover {
+
+    transform:
+        translateY(-5px);
+
+    border-color: #b9d2e3;
+
+    box-shadow:
+        0 14px 30px
+        rgba(20,48,70,0.10);
+}
+
+
+.stat-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 90px;
+
+    height: 90px;
+
+    right: -40px;
+
+    bottom: -40px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(29,118,184,0.07);
+}
+
+
+.stat-label {
+
+    color: #718497;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+.stat-value {
+
+    margin-top: 10px;
+
+    color: #18344c;
+
+    font-size: 28px;
+
+    font-weight: 750;
+
+    letter-spacing: -0.5px;
+}
+
+
+.stat-sub {
+
+    margin-top: 5px;
+
+    color: #91a0ad;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   MAIN DASHBOARD
+========================================================= */
+
+.dashboard {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.12fr)
+        minmax(340px, 0.88fr);
+
+    gap: 20px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card {
+
+    background:
+        rgba(255,255,255,0.97);
+
+    border:
+        1px solid #dfe7ee;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 6px 24px
+        rgba(20,48,70,0.055);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+.card:hover {
+
+    box-shadow:
+        0 12px 32px
+        rgba(20,48,70,0.085);
+}
+
+
+.card-header {
+
+    padding:
+        23px 24px 18px;
+
+    border-bottom:
+        1px solid #edf1f5;
+}
+
+
+.card-header h3 {
+
+    color: #18344c;
+
+    font-size: 18px;
+
+    font-weight: 700;
+}
+
+
+.card-header p {
+
+    margin-top: 5px;
+
+    color: #8392a1;
+
+    font-size: 12px;
+}
+
+
+.card-body {
+
+    padding: 23px 24px 25px;
+}
+
+
+/* =========================================================
+   WARD SELECTOR
+========================================================= */
+
+.selector-label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #41576a;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.2px;
+}
+
+
+.select-wrapper {
+
+    position: relative;
+}
+
+
+.select-wrapper::after {
+
+    content: "⌄";
+
+    position: absolute;
+
+    right: 15px;
+
+    top: 50%;
+
+    transform:
+        translateY(-53%);
+
+    pointer-events: none;
+
+    color: #71879a;
+
+    font-size: 18px;
+}
+
+
+select {
+
+    width: 100%;
+
+    appearance: none;
+
+    padding:
+        14px 44px 14px 14px;
+
+    border:
+        1px solid #d3dee7;
+
+    border-radius: 9px;
+
+    background: #fbfcfd;
+
+    color: #253d51;
+
+    font-size: 14px;
+
+    outline: none;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+select:hover {
+
+    background: white;
+
+    border-color: #b8cbd9;
+}
+
+
+select:focus {
+
+    background: white;
+
+    border-color: #3285b8;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(50,133,184,0.11);
+}
+
+
+.analyze-button {
+
+    width: 100%;
+
+    margin-top: 14px;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #176da2,
+            #12527b
+        );
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.2px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 18px
+        rgba(23,109,162,0.20);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+.analyze-button:hover:not(:disabled) {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 11px 23px
+        rgba(23,109,162,0.27);
+}
+
+
+.analyze-button:active:not(:disabled) {
+
+    transform:
+        translateY(0);
+}
+
+
+.analyze-button:disabled {
+
+    opacity: 0.55;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading {
+
+    display: none;
+
+    margin-top: 15px;
+
+    padding: 13px;
+
+    border-radius: 8px;
+
+    background: #eef6fb;
+
+    color: #326782;
+
+    text-align: center;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.error {
+
+    display: none;
+
+    margin-top: 14px;
+
+    padding: 12px 14px;
+
+    border-radius: 8px;
+
+    background: #fff0f2;
+
+    border:
+        1px solid #ffd3da;
+
+    color: #a7354a;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+.result {
+
+    display: none;
+
+    margin-top: 23px;
+
+    border-top:
+        1px solid #edf1f5;
+
+    padding-top: 23px;
+
+    animation:
+        resultIn 0.45s ease;
+}
+
+
+@keyframes resultIn {
+
+    from {
+        opacity: 0;
+        transform:
+            translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0);
+    }
+}
+
+
+.result-top {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f6f9fb,
+            #eef4f8
+        );
+
+    border:
+        1px solid #e0e9ef;
+}
+
+
+.result-ward-label {
+
+    color: #8292a0;
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+
+    font-weight: 800;
+}
+
+
+.result-ward {
+
+    margin-top: 5px;
+
+    color: #17364e;
+
+    font-size: 21px;
+
+    font-weight: 750;
+}
+
+
+.risk-badge {
+
+    display: inline-block;
+
+    margin-top: 9px;
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+
+.risk-low {
+
+    background: #dcf6e8;
+
+    color: #177448;
+}
+
+
+.risk-moderate {
+
+    background: #fff2c9;
+
+    color: #926900;
+}
+
+
+.risk-high {
+
+    background: #ffe3d7;
+
+    color: #b44c24;
+}
+
+
+.risk-very-high {
+
+    background: #ffdce3;
+
+    color: #b32648;
+}
+
+
+.probability-box {
+
+    text-align: right;
+}
+
+
+.probability-value {
+
+    color: #17364e;
+
+    font-size: 31px;
+
+    font-weight: 800;
+
+    letter-spacing: -1px;
+}
+
+
+.probability-label {
+
+    margin-top: 2px;
+
+    color: #8494a2;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.progress-wrap {
+
+    margin-top: 15px;
+}
+
+
+.progress-track {
+
+    width: 100%;
+
+    height: 8px;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    background: #e5ebef;
+}
+
+
+.progress-fill {
+
+    width: 0%;
+
+    height: 100%;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #2b91c8,
+            #175a82
+        );
+
+    transition:
+        width 0.8s ease;
+}
+
+
+/* =========================================================
+   INFORMATION GRID
+========================================================= */
+
+.info-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 10px;
+
+    margin-top: 15px;
+}
+
+
+.info-box {
+
+    padding: 13px;
+
+    border:
+        1px solid #e7edf2;
+
+    border-radius: 9px;
+
+    background: #fafcfd;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.info-box:hover {
+
+    transform:
+        translateY(-2px);
+
+    background: white;
+
+    border-color: #cddde8;
+}
+
+
+.info-label {
+
+    color: #8796a4;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+
+.info-value {
+
+    margin-top: 5px;
+
+    color: #294257;
+
+    font-size: 15px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   RISK MESSAGE
+========================================================= */
+
+.risk-message {
+
+    margin-top: 15px;
+
+    padding: 14px 15px;
+
+    border-left:
+        3px solid #3285b8;
+
+    border-radius: 7px;
+
+    background: #f0f7fb;
+
+    color: #4f687b;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   RECOMMENDATIONS
+========================================================= */
+
+.recommendations {
+
+    margin-top: 19px;
+}
+
+
+.recommendations-title {
+
+    margin-bottom: 10px;
+
+    color: #304a5e;
+
+    font-size: 13px;
+
+    font-weight: 750;
+}
+
+
+.recommendation {
+
+    position: relative;
+
+    margin-bottom: 7px;
+
+    padding: 11px 13px 11px 31px;
+
+    border:
+        1px solid #e7edf2;
+
+    border-radius: 8px;
+
+    background: #fafcfd;
+
+    color: #566c7e;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.recommendation::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 12px;
+
+    top: 16px;
+
+    width: 6px;
+
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #2782b5;
+}
+
+
+.recommendation:hover {
+
+    transform:
+        translateX(4px);
+
+    background: white;
+
+    box-shadow:
+        0 5px 15px
+        rgba(20,48,70,0.06);
+}
+
+
+/* =========================================================
+   RIGHT PANEL
+========================================================= */
+
+.distribution-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+
+.distribution-row {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 13px 14px;
+
+    border:
+        1px solid #e6edf2;
+
+    border-radius: 9px;
+
+    background: #fafcfd;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.distribution-row:hover {
+
+    transform:
+        translateX(4px);
+
+    background: white;
+
+    box-shadow:
+        0 6px 16px
+        rgba(20,48,70,0.06);
+}
+
+
+.distribution-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: #52687a;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.distribution-number {
+
+    color: #294257;
+
+    font-size: 15px;
+
+    font-weight: 800;
+}
+
+
+.risk-dot {
+
+    width: 9px;
+
+    height: 9px;
+
+    border-radius: 50%;
+}
+
+
+.low-dot {
+    background: #35b878;
+}
+
+.moderate-dot {
+    background: #dfb02e;
+}
+
+.high-dot {
+    background: #ee7745;
+}
+
+.very-high-dot {
+    background: #d73759;
+}
+
+
+/* =========================================================
+   DISTRIBUTION VISUAL
+========================================================= */
+
+.distribution-summary {
+
+    margin-top: 19px;
+
+    padding-top: 18px;
+
+    border-top:
+        1px solid #edf1f5;
+}
+
+
+.distribution-summary-title {
+
+    margin-bottom: 10px;
+
+    color: #40596d;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+.distribution-bar {
+
+    display: flex;
+
+    width: 100%;
+
+    height: 10px;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    background: #edf1f4;
+}
+
+
+.segment {
+
+    height: 100%;
+
+    transition:
+        width 0.7s ease;
+}
+
+
+.segment-low {
+    background: #35b878;
+}
+
+.segment-moderate {
+    background: #dfb02e;
+}
+
+.segment-high {
+    background: #ee7745;
+}
+
+.segment-very-high {
+    background: #d73759;
+}
+
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.about {
+
+    margin-top: 27px;
+
+    padding-top: 22px;
+
+    border-top:
+        1px solid #edf1f5;
+}
+
+
+.about h3 {
+
+    margin-bottom: 11px;
+
+    color: #30495d;
+
+    font-size: 15px;
+}
+
+
+.about p {
+
+    margin-bottom: 11px;
+
+    color: #728496;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+}
+
+
+.system-note {
+
+    margin-top: 17px;
+
+    padding: 12px 13px;
+
+    border-radius: 8px;
+
+    background: #f3f7fa;
+
+    color: #7b8c9b;
+
+    font-size: 10px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   FLOATING MOUSE EFFECT
+========================================================= */
+
+.cursor-glow {
+
+    position: fixed;
+
+    width: 180px;
+
+    height: 180px;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(35,129,183,0.09),
+            rgba(35,129,183,0)
+            70%
+        );
+
+    transform:
+        translate(-50%, -50%);
+
+    z-index: 999;
+
+    opacity: 0;
+
+    transition:
+        opacity 0.3s ease;
+}
+
+
+.float-card {
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+
+    margin-top: 25px;
+
+    padding-top: 18px;
+
+    border-top:
+        1px solid #dce5eb;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #8a99a7;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .stats {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .dashboard {
+
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .header {
+
+        height: auto;
+
+        padding: 15px 20px;
+
+        gap: 15px;
+
+        align-items: flex-start;
+    }
+
+    .system-status {
+
+        display: none;
+    }
+
+    .container {
+
+        width:
+            calc(100% - 30px);
+
+        padding-top: 25px;
+    }
+
+    .page-intro {
+
+        display: block;
+    }
+
+    .data-badge {
+
+        display: inline-block;
+
+        margin-top: 16px;
+    }
+
+    .page-intro h2 {
+
+        font-size: 27px;
+    }
+
+    .stats {
+
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 500px) {
+
+    .brand-text h1 {
+
+        font-size: 14px;
+    }
+
+    .brand-text p {
+
+        font-size: 9px;
+    }
+
+    .card-body,
+    .card-header {
+
+        padding-left: 17px;
+
+        padding-right: 17px;
+    }
+
+    .info-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .result-top {
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    .probability-value {
+
+        font-size: 25px;
+    }
+
+    .footer {
+
+        display: block;
+
+        line-height: 1.8;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     MOUSE GLOW
+========================================================= -->
+
+<div class="cursor-glow"
+     id="cursorGlow">
+</div>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+    <div class="brand">
+
+        <div class="brand-mark">
+            SF
+        </div>
+
+        <div class="brand-text">
+
+            <h1>
+                Smart Chennai Flood Risk
+            </h1>
+
+            <p>
+                FLOOD RISK ANALYTICS PLATFORM
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="system-status">
+
+        <span class="status-dot">
+        </span>
+
+        Machine Learning System Online
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="container">
+
+
+    <!-- =====================================================
+         INTRO
+    ====================================================== -->
+
+    <section class="page-intro">
+
+        <div class="intro-left">
+
+            <span class="eyebrow">
+                Chennai Flood Intelligence
+            </span>
+
+            <h2>
+                Ward-Level Flood Risk Dashboard
+            </h2>
+
+            <p>
+                Analyze flood probability and contributing
+                environmental factors across Greater Chennai
+                Corporation wards using spatial data and
+                machine learning.
+            </p>
+
+        </div>
+
+
+        <div class="data-badge">
+
+            Dataset:
+            <strong>
+                GCC Ward Analysis
+            </strong>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         STATISTICS
+    ====================================================== -->
+
+    <section class="stats">
+
+
+        <div class="stat-card float-card">
+
+            <div class="stat-label">
+                Total Wards
+            </div>
+
+            <div class="stat-value"
+                 id="totalWards">
+                -
+            </div>
+
+            <div class="stat-sub">
+                Greater Chennai Corporation
+            </div>
+
+        </div>
+
+
+        <div class="stat-card float-card">
+
+            <div class="stat-label">
+                Average Flood Probability
+            </div>
+
+            <div class="stat-value">
+
+                <span id="averageProbability">
+                    -
+                </span>%
+
+            </div>
+
+            <div class="stat-sub">
+                Across analyzed wards
+            </div>
+
+        </div>
+
+
+        <div class="stat-card float-card">
+
+            <div class="stat-label">
+                Highest Ward Probability
+            </div>
+
+            <div class="stat-value">
+
+                <span id="maxProbability">
+                    -
+                </span>%
+
+            </div>
+
+            <div class="stat-sub">
+                Maximum recorded value
+            </div>
+
+        </div>
+
+
+        <div class="stat-card float-card">
+
+            <div class="stat-label">
+                ML Features
+            </div>
+
+            <div class="stat-value"
+                 id="modelFeatures">
+                -
+            </div>
+
+            <div class="stat-sub">
+                Input variables used
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         DASHBOARD
+    ====================================================== -->
+
+    <section class="dashboard">
+
+
+        <!-- =================================================
+             LEFT CARD
+        ================================================= -->
+
+        <div class="card float-card">
+
+
+            <div class="card-header">
+
+                <h3>
+                    Ward Risk Analysis
+                </h3>
+
+                <p>
+                    Select a ward to view its flood-risk profile
+                </p>
+
+            </div>
+
+
+            <div class="card-body">
+
+
+                <label class="selector-label"
+                       for="wardSelect">
+
+                    Select Chennai Ward
+
+                </label>
+
+
+                <div class="select-wrapper">
+
+                    <select id="wardSelect">
+
+                        <option value="">
+                            Loading wards...
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    class="analyze-button"
+                    id="analyzeButton"
+                    onclick="analyzeWard()"
+                    disabled>
+
+                    Analyze Ward Risk
+
+                </button>
+
+
+                <div class="loading"
+                     id="loading">
+
+                    Processing ward flood-risk data...
+
+                </div>
+
+
+                <div class="error"
+                     id="error">
+                </div>
+
+
+                <!-- =========================================
+                     RESULT
+                ========================================== -->
+
+                <div class="result"
+                     id="result">
+
+
+                    <!-- RESULT HEADER -->
+
+                    <div class="result-top">
+
+
+                        <div>
+
+                            <div class="result-ward-label">
+                                Selected Ward
+                            </div>
+
+                            <div class="result-ward"
+                                 id="resultWard">
+
+                                -
+
+                            </div>
+
+                            <span
+                                class="risk-badge"
+                                id="riskBadge">
+
+                                -
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="probability-box">
+
+                            <div
+                                class="probability-value">
+
+                                <span
+                                    id="probability">
+
+                                    0
+
+                                </span>%
+
+                            </div>
+
+                            <div class="probability-label">
+                                Flood Probability
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PROGRESS -->
+
+                    <div class="progress-wrap">
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-fill"
+                                id="progressFill">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- BASIC INFORMATION -->
+
+                    <div class="info-grid">
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Ward ID
+                            </div>
+
+                            <div
+                                class="info-value"
+                                id="wardId">
+
+                                -
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Zone
+                            </div>
+
+                            <div
+                                class="info-value"
+                                id="zone">
+
+                                -
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Region
+                            </div>
+
+                            <div
+                                class="info-value"
+                                id="region">
+
+                                -
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Risk Class
+                            </div>
+
+                            <div
+                                class="info-value"
+                                id="riskClass">
+
+                                -
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- RISK MESSAGE -->
+
+                    <div
+                        class="risk-message"
+                        id="riskMessage">
+
+                    </div>
+
+
+                    <!-- FLOOD FACTORS -->
+
+                    <div class="info-grid">
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Flood Points
+                            </div>
+
+                            <div
+                                class="info-value"
+                                id="floodPoints">
+
+                                -
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Inundation Points
+                            </div>
+
+                            <div
+                                class="info-value"
+                                id="inundationPoints">
+
+                                -
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Maximum Flood Depth
+                            </div>
+
+                            <div
+                                class="info-value"
+                                id="maxDepth">
+
+                                -
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Waterbody Coverage
+                            </div>
+
+                            <div
+                                class="info-value"
+                                id="waterbodyPct">
+
+                                -
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                River Coverage
+                            </div>
+
+                            <div
+                                class="info-value"
+                                id="riverPct">
+
+                                -
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                100-Year Flow Area
+                            </div>
+
+                            <div
+                                class="info-value"
+                                id="flow100Pct">
+
+                                -
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- RECOMMENDATIONS -->
+
+                    <div class="recommendations">
+
+                        <div class="recommendations-title">
+
+                            Recommended Flood Mitigation Actions
+
+                        </div>
+
+                        <div id="recommendationList">
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             RIGHT CARD
+        ================================================= -->
+
+        <div class="card float-card">
+
+
+            <div class="card-header">
+
+                <h3>
+                    Ward Risk Distribution
+                </h3>
+
+                <p>
+                    Distribution of analyzed wards by risk class
+                </p>
+
+            </div>
+
+
+            <div class="card-body">
+
+
+                <div class="distribution-list">
+
+
+                    <div class="distribution-row">
+
+                        <div class="distribution-left">
+
+                            <span
+                                class="risk-dot low-dot">
+                            </span>
+
+                            Low
+
+                        </div>
+
+                        <div
+                            class="distribution-number"
+                            id="lowCount">
+
+                            -
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="distribution-row">
+
+                        <div class="distribution-left">
+
+                            <span
+                                class="risk-dot moderate-dot">
+                            </span>
+
+                            Moderate
+
+                        </div>
+
+                        <div
+                            class="distribution-number"
+                            id="moderateCount">
+
+                            -
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="distribution-row">
+
+                        <div class="distribution-left">
+
+                            <span
+                                class="risk-dot high-dot">
+                            </span>
+
+                            High
+
+                        </div>
+
+                        <div
+                            class="distribution-number"
+                            id="highCount">
+
+                            -
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="distribution-row">
+
+                        <div class="distribution-left">
+
+                            <span
+                                class="risk-dot very-high-dot">
+                            </span>
+
+                            Very High
+
+                        </div>
+
+                        <div
+                            class="distribution-number"
+                            id="veryHighCount">
+
+                            -
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DISTRIBUTION BAR -->
+
+                <div class="distribution-summary">
+
+                    <div class="distribution-summary-title">
+
+                        Risk Distribution Overview
+
+                    </div>
+
+
+                    <div class="distribution-bar">
+
+                        <div
+                            class="segment segment-low"
+                            id="segmentLow"
+                            style="width:0%">
+
+                        </div>
+
+                        <div
+                            class="segment segment-moderate"
+                            id="segmentModerate"
+                            style="width:0%">
+
+                        </div>
+
+                        <div
+                            class="segment segment-high"
+                            id="segmentHigh"
+                            style="width:0%">
+
+                        </div>
+
+                        <div
+                            class="segment segment-very-high"
+                            id="segmentVeryHigh"
+                            style="width:0%">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ABOUT -->
+
+                <div class="about">
+
+                    <h3>
+                        About the System
+                    </h3>
+
+
+                    <p>
+                        Smart Chennai Flood Risk Analytics
+                        combines spatial information and
+                        machine learning to evaluate flood
+                        conditions at ward level.
+                    </p>
+
+
+                    <p>
+                        The analysis incorporates historical
+                        flood evidence, inundation points,
+                        hazard zones, drainage flow areas,
+                        waterbody coverage, river coverage
+                        and rainfall-related features.
+                    </p>
+
+
+                    <p>
+                        Ward-level analysis is generated from
+                        the Greater Chennai Corporation ward
+                        boundaries and the underlying flood
+                        analysis grid.
+                    </p>
+
+
+                    <div class="system-note">
+
+                        Analysis framework:
+                        spatial feature engineering,
+                        ward-level aggregation and
+                        machine-learning-based flood-risk
+                        classification.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="footer">
+
+        <span>
+            Smart Chennai Flood Risk Analytics
+        </span>
+
+        <span>
+            Data Science and Machine Learning System
+        </span>
+
+    </footer>
+
+</main>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
+
+let wards = [];
+
+
+/* =========================================================
+   PAGE LOAD
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadSummary();
+
+        loadWards();
+
+        setupMouseEffect();
+
+    }
+);
+
+
+/* =========================================================
+   LOAD SUMMARY
+========================================================= */
+
+async function loadSummary() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/summary"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load summary"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        document.getElementById(
+            "totalWards"
+        ).textContent =
+            data.total_wards ?? "-";
+
+
+        document.getElementById(
+            "averageProbability"
+        ).textContent =
+            Number(
+                data.average_probability ?? 0
+            ).toFixed(2);
+
+
+        document.getElementById(
+            "maxProbability"
+        ).textContent =
+            Number(
+                data.max_probability ?? 0
+            ).toFixed(2);
+
+
+        document.getElementById(
+            "modelFeatures"
+        ).textContent =
+            data.model_features ?? "-";
+
+
+        const distribution =
+            data.risk_distribution || {};
+
+
+        const low =
+            Number(
+                distribution["Low"] || 0
+            );
+
+
+        const moderate =
+            Number(
+                distribution["Moderate"] || 0
+            );
+
+
+        const high =
+            Number(
+                distribution["High"] || 0
+            );
+
+
+        const veryHigh =
+            Number(
+                distribution["Very High"] || 0
+            );
+
+
+        document.getElementById(
+            "lowCount"
+        ).textContent = low;
+
+
+        document.getElementById(
+            "moderateCount"
+        ).textContent = moderate;
+
+
+        document.getElementById(
+            "highCount"
+        ).textContent = high;
+
+
+        document.getElementById(
+            "veryHighCount"
+        ).textContent = veryHigh;
+
+
+        const total =
+            low +
+            moderate +
+            high +
+            veryHigh;
+
+
+        if (total > 0) {
+
+            document.getElementById(
+                "segmentLow"
+            ).style.width =
+                (low / total * 100) + "%";
+
+
+            document.getElementById(
+                "segmentModerate"
+            ).style.width =
+                (moderate / total * 100) + "%";
+
+
+            document.getElementById(
+                "segmentHigh"
+            ).style.width =
+                (high / total * 100) + "%";
+
+
+            document.getElementById(
+                "segmentVeryHigh"
+            ).style.width =
+                (veryHigh / total * 100) + "%";
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Summary loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD WARDS
+========================================================= */
+
+async function loadWards() {
+
+    const select =
+        document.getElementById(
+            "wardSelect"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/wards"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load ward data"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        /*
+            Backend normally returns:
+
+            {
+                "wards": [...]
+            }
+
+            This also supports a direct array
+            if required.
+        */
+
+        if (Array.isArray(data)) {
+
+            wards = data;
+
+        }
+
+        else {
+
+            wards =
+                data.wards || [];
+
+        }
+
+
+        if (
+            wards.length === 0
+        ) {
+
+            throw new Error(
+                "No wards were returned by the server."
+            );
+
+        }
+
+
+        select.innerHTML = "";
+
+
+        const defaultOption =
+            document.createElement(
+                "option"
+            );
+
+
+        defaultOption.value = "";
+
+        defaultOption.textContent =
+            "Select a Chennai Ward";
+
+
+        select.appendChild(
+            defaultOption
+        );
+
+
+        wards.forEach(
+            function(ward) {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                /*
+                    IMPORTANT:
+
+                    Use ward_id as the value
+                    because the Flask backend
+                    endpoint is:
+
+                    /api/ward/<ward_id>
+                */
+
+                option.value =
+                    String(
+                        ward.ward_id
+                    );
+
+
+                const wardName =
+                    ward.ward ||
+                    "Ward " +
+                    ward.ward_id;
+
+
+                option.textContent =
+                    "Ward " +
+                    wardName;
+
+
+                select.appendChild(
+                    option
+                );
+
+            }
+        );
+
+
+        document.getElementById(
+            "analyzeButton"
+        ).disabled = false;
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Ward loading error:",
+            error
+        );
+
+
+        select.innerHTML = "";
+
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value = "";
+
+
+        option.textContent =
+            "Unable to load wards";
+
+
+        select.appendChild(
+            option
+        );
+
+
+        showError(
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ANALYZE WARD
+========================================================= */
+
+async function analyzeWard() {
+
+    const wardId =
+        document.getElementById(
+            "wardSelect"
+        ).value;
+
+
+    if (!wardId) {
+
+        showError(
+            "Please select a ward first."
+        );
+
+        return;
+
+    }
+
+
+    const button =
+        document.getElementById(
+            "analyzeButton"
+        );
+
+
+    const loading =
+        document.getElementById(
+            "loading"
+        );
+
+
+    button.disabled = true;
+
+
+    loading.style.display =
+        "block";
+
+
+    hideError();
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/ward/" +
+                encodeURIComponent(
+                    wardId
+                )
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "Ward analysis failed."
+            );
+
+        }
+
+
+        displayWardResult(
+            data
+        );
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Ward analysis error:",
+            error
+        );
+
+
+        showError(
+            error.message
+        );
+
+    }
+
+    finally {
+
+        button.disabled = false;
+
+
+        loading.style.display =
+            "none";
+
+    }
+
+}
+
+
+/* =========================================================
+   DISPLAY WARD RESULT
+========================================================= */
+
+function displayWardResult(
+    data
+) {
+
+    const result =
+        document.getElementById(
+            "result"
+        );
+
+
+    result.style.display =
+        "block";
+
+
+    /* =====================================================
+       BASIC INFORMATION
+    ===================================================== */
+
+    document.getElementById(
+        "resultWard"
+    ).textContent =
+        data.ward ||
+        data.ward_id ||
+        "-";
+
+
+    document.getElementById(
+        "wardId"
+    ).textContent =
+        data.ward_id ||
+        "-";
+
+
+    document.getElementById(
+        "zone"
+    ).textContent =
+        data.zone ||
+        "-";
+
+
+    document.getElementById(
+        "region"
+    ).textContent =
+        data.region ||
+        "-";
+
+
+    document.getElementById(
+        "riskClass"
+    ).textContent =
+        data.risk_class ||
+        "-";
+
+
+    /* =====================================================
+       PROBABILITY
+    ===================================================== */
+
+    const probability =
+        Number(
+            data.flood_probability || 0
+        );
+
+
+    document.getElementById(
+        "probability"
+    ).textContent =
+        probability.toFixed(2);
+
+
+    document.getElementById(
+        "progressFill"
+    ).style.width =
+        Math.min(
+            Math.max(
+                probability,
+                0
+            ),
+            100
+        ) + "%";
+
+
+    /* =====================================================
+       RISK BADGE
+    ===================================================== */
+
+    const badge =
+        document.getElementById(
+            "riskBadge"
+        );
+
+
+    const risk =
+        data.risk_class ||
+        "Unknown";
+
+
+    badge.textContent =
+        risk;
+
+
+    badge.className =
+        "risk-badge " +
+        getRiskClass(
+            risk
+        );
+
+
+    /* =====================================================
+       RISK MESSAGE
+    ===================================================== */
+
+    document.getElementById(
+        "riskMessage"
+    ).textContent =
+        data.risk_message ||
+        generateRiskMessage(
+            risk,
+            probability
+        );
+
+
+    /* =====================================================
+       FLOOD FACTORS
+    ===================================================== */
+
+    document.getElementById(
+        "floodPoints"
+    ).textContent =
+        formatNumber(
+            data.flood_point_count
+        );
+
+
+    document.getElementById(
+        "inundationPoints"
+    ).textContent =
+        formatNumber(
+            data.inundation_point_count
+        );
+
+
+    document.getElementById(
+        "maxDepth"
+    ).textContent =
+        formatNumber(
+            data.max_flood_depth
+        );
+
+
+    document.getElementById(
+        "waterbodyPct"
+    ).textContent =
+        formatPercent(
+            data.waterbody_pct
+        );
+
+
+    document.getElementById(
+        "riverPct"
+    ).textContent =
+        formatPercent(
+            data.river_pct
+        );
+
+
+    document.getElementById(
+        "flow100Pct"
+    ).textContent =
+        formatPercent(
+            data.flow100_pct
+        );
+
+
+    /* =====================================================
+       RECOMMENDATIONS
+    ===================================================== */
+
+    displayRecommendations(
+        data.recommendations
+    );
+
+
+    /* =====================================================
+       SCROLL
+    ===================================================== */
+
+    setTimeout(
+        function() {
+
+            result.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest"
+            });
+
+        },
+        100
+    );
+
+}
+
+
+/* =========================================================
+   RISK CLASS
+========================================================= */
+
+function getRiskClass(
+    risk
+) {
+
+    if (!risk) {
+
+        return "risk-low";
+
+    }
+
+
+    const value =
+        String(risk)
+        .toLowerCase()
+        .replace(
+            /\s+/g,
+            "-"
+        );
+
+
+    if (
+        value === "very-high"
+    ) {
+
+        return "risk-very-high";
+
+    }
+
+
+    if (
+        value === "high"
+    ) {
+
+        return "risk-high";
+
+    }
+
+
+    if (
+        value === "moderate"
+    ) {
+
+        return "risk-moderate";
+
+    }
+
+
+    return "risk-low";
+
+}
+
+
+/* =========================================================
+   RISK MESSAGE
+========================================================= */
+
+function generateRiskMessage(
+    risk,
+    probability
+) {
+
+    if (
+        risk === "Very High"
+    ) {
+
+        return (
+            "This ward has a very high predicted " +
+            "flood-risk level. Increased attention to " +
+            "drainage capacity, flood-prone locations " +
+            "and emergency preparedness is recommended."
+        );
+
+    }
+
+
+    if (
+        risk === "High"
+    ) {
+
+        return (
+            "This ward shows a high predicted flood-risk " +
+            "level based on the analyzed spatial and " +
+            "environmental features."
+        );
+
+    }
+
+
+    if (
+        risk === "Moderate"
+    ) {
+
+        return (
+            "This ward shows a moderate predicted flood-risk " +
+            "level. Continued monitoring of drainage and " +
+            "historical flood-prone locations is advisable."
+        );
+
+    }
+
+
+    return (
+        "This ward currently shows a lower predicted " +
+        "flood-risk level based on the analyzed features."
+    );
+
+}
+
+
+/* =========================================================
+   RECOMMENDATIONS
+========================================================= */
+
+function displayRecommendations(
+    recommendations
+) {
+
+    const container =
+        document.getElementById(
+            "recommendationList"
+        );
+
+
+    container.innerHTML = "";
+
+
+    if (
+        Array.isArray(
+            recommendations
+        )
+    ) {
+
+        /* Already an array */
+
+    }
+
+    else if (
+        typeof recommendations ===
+        "string"
+    ) {
+
+        recommendations =
+            recommendations
+            .split(";")
+            .map(
+                item =>
+                    item.trim()
+            )
+            .filter(
+                item =>
+                    item.length > 0
+            );
+
+    }
+
+    else {
+
+        recommendations = [];
+
+    }
+
+
+    if (
+        recommendations.length === 0
+    ) {
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+
+        div.className =
+            "recommendation";
+
+
+        div.textContent =
+            "No specific mitigation recommendation is available for this ward.";
+
+
+        container.appendChild(
+            div
+        );
+
+
+        return;
+
+    }
+
+
+    recommendations.forEach(
+        function(item) {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "recommendation";
+
+
+            div.textContent =
+                item;
+
+
+            container.appendChild(
+                div
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   NUMBER FORMAT
+========================================================= */
+
+function formatNumber(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+
+        return "-";
+
+    }
+
+
+    const number =
+        Number(value);
+
+
+    if (
+        Number.isNaN(number)
+    ) {
+
+        return "-";
+
+    }
+
+
+    return number.toFixed(2);
+
+}
+
+
+/* =========================================================
+   PERCENT FORMAT
+========================================================= */
+
+function formatPercent(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+
+        return "-";
+
+    }
+
+
+    const number =
+        Number(value);
+
+
+    if (
+        Number.isNaN(number)
+    ) {
+
+        return "-";
+
+    }
+
+
+    return number.toFixed(2) + "%";
+
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function showError(
+    message
+) {
+
+    const error =
+        document.getElementById(
+            "error"
+        );
+
+
+    error.textContent =
+        message;
+
+
+    error.style.display =
+        "block";
+
+}
+
+
+function hideError() {
+
+    document.getElementById(
+        "error"
+    ).style.display =
+        "none";
+
+}
+
+
+/* =========================================================
+   MOUSE FLOATING EFFECT
+========================================================= */
+
+function setupMouseEffect() {
+
+    const glow =
+        document.getElementById(
+            "cursorGlow"
+        );
+
+
+    document.addEventListener(
+        "mousemove",
+        function(event) {
+
+            glow.style.left =
+                event.clientX + "px";
+
+
+            glow.style.top =
+                event.clientY + "px";
+
+
+            glow.style.opacity =
+                "1";
+
+        }
+    );
+
+
+    document.addEventListener(
+        "mouseleave",
+        function() {
+
+            glow.style.opacity =
+                "0";
+
+        }
+    );
+
+
+    /*
+       Subtle card movement when
+       mouse is nearby.
+    */
+
+    const cards =
+        document.querySelectorAll(
+            ".float-card"
+        );
+
+
+    cards.forEach(
+        function(card) {
+
+            card.addEventListener(
+                "mousemove",
+                function(event) {
+
+                    const rect =
+                        card.getBoundingClientRect();
+
+
+                    const x =
+                        event.clientX -
+                        rect.left;
+
+
+                    const y =
+                        event.clientY -
+                        rect.top;
+
+
+                    const centerX =
+                        rect.width / 2;
+
+
+                    const centerY =
+                        rect.height / 2;
+
+
+                    const rotateX =
+                        ((y - centerY) /
+                        centerY) * -1.2;
+
+
+                    const rotateY =
+                        ((x - centerX) /
+                        centerX) * 1.2;
+
+
+                    card.style.transform =
+                        "perspective(900px) " +
+                        "rotateX(" +
+                        rotateX +
+                        "deg) " +
+                        "rotateY(" +
+                        rotateY +
+                        "deg) " +
+                        "translateY(-3px)";
+
+                }
+            );
+
+
+            card.addEventListener(
+                "mouseleave",
+                function() {
+
+                    card.style.transform =
+                        "";
+
+                }
+            );
+
+        }
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>
